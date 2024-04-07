@@ -72,7 +72,11 @@ def main():
     interpreter.set_tensor(input_details[0]['index'], input_data)
     interpreter.invoke()
     end_time = time.time()
-    
+
+    inference_time = (end_time - start_time) * 1000
+    print(f"Inference Time: {inference_time:.2f} ms")
+
+
     result = interpreter.get_tensor(output_details[0]['index'])[0]
     if len(result.shape) == 3:  # For models outputting a 3D array
         result = np.argmax(result, axis=-1)
