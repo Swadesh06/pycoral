@@ -2,6 +2,7 @@ import argparse
 import numpy as np
 from PIL import Image
 import tensorflow as tf  # Ensure TensorFlow is installed
+import time 
 
 def create_pascal_label_colormap():
     """Creates a label colormap used in PASCAL VOC segmentation benchmark."""
@@ -66,10 +67,12 @@ def main():
     input_data = np.expand_dims(img, axis=0)
     if input_details[0]['dtype'] == np.float32:
         input_data = input_data.astype(np.float32) / 255.0  # Normalize if needed
-
+        
+    start_time = time.time()
     interpreter.set_tensor(input_details[0]['index'], input_data)
     interpreter.invoke()
-
+    end_time = time.time()
+    
     result = interpreter.get_tensor(output_details[0]['index'])[0]
     if len(result.shape) == 3:  # For models outputting a 3D array
         result = np.argmax(result, axis=-1)
