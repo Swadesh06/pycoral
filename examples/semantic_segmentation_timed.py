@@ -29,7 +29,7 @@ python3 examples/semantic_segmentation.py \
 """
 
 import argparse
-
+import time
 import numpy as np
 from PIL import Image
 
@@ -113,8 +113,11 @@ def main():
   else:
     resized_img = img.resize((width, height), Image.LANCZOS)
     common.set_input(interpreter, resized_img)
-
+  start_time = time.time()
   interpreter.invoke()
+  end_time = time.time()
+  inference_time = (end_time - start_time) * 1000
+  print(f"Inference Time: {inference_time:.2f} ms")
 
   result = segment.get_output(interpreter)
   if len(result.shape) == 3:
